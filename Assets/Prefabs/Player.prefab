@@ -162,7 +162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 2190681270
+  GlobalObjectIdHash: 3485298717
   InScenePlacedSourceGlobalObjectIdHash: 3485298717
   DeferredDespawnTick: 0
   Ownership: 1
@@ -188,7 +188,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   ShowTopMostFoldoutHeaderGroup: 1
-  speed: 1
+  speed: 5
   MainCamera: {fileID: 0}
 --- !u!54 &3689846925566086666
 Rigidbody:

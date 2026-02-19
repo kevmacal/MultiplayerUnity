@@ -10,12 +10,12 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] MainCameraObject MainCamera;
     private Vector2 moveInput;
     private Rigidbody rb;
-    private NetworkVariable<Color> netColor = new NetworkVariable<Color>(
+    private NetworkVariable<Color> networkColor = new NetworkVariable<Color>(
         Color.white, 
         NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Owner // El dueño elige su color
     );
-    private Color[] colores={Color.red,Color.blue,Color.green};
+    private Color[] colores={Color.green,Color.blue,Color.red};
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -51,16 +51,18 @@ public class PlayerMovement : NetworkBehaviour
     }
     public override void OnNetworkSpawn()
     {
-        netColor.OnValueChanged += OnColorChanged;
+        networkColor.OnValueChanged += OnColorChanged;
         if (!IsOwner)
         {
             // Desactiva el componente que escucha el teclado si no es mi cápsula
             GetComponent<PlayerInput>().enabled = false;
-            ApplyColor(netColor.Value);
+            //GetComponent<Renderer>().material.color=Color.gray;
+            ApplyColor(networkColor.Value);
         }
         else
         {
-            netColor.Value = colores[(int)NetworkObjectId%colores.Length];       
+            GetComponent<Renderer>().material.color=Color.blue;
+            networkColor.Value = colores[(int)NetworkObjectId%colores.Length];       
         }
     }
     private void OnColorChanged(Color oldColor, Color newColor)
@@ -70,19 +72,18 @@ public class PlayerMovement : NetworkBehaviour
     }
 
     private void ApplyColor(Color colorToApply)
-    {
-        // Usamos PropertyBlock para evitar crear copias de materiales (más eficiente)
+    {        
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         MaterialPropertyBlock propBlock = new MaterialPropertyBlock();
-        renderer.GetPropertyBlock(propBlock);
-        propBlock.SetColor("_Color", colorToApply);
-        renderer.SetPropertyBlock(propBlock);
+        //renderer.GetPropertyBlock(propBlock);
+        //propBlock.SetColor("_Color", colorToApply);
+        //renderer.SetPropertyBlock(propBlock);
         renderer.material.color=colorToApply;
     }
 
     // Limpieza al destruir el objeto
     public override void OnNetworkDespawn()
     {
-        netColor.OnValueChanged -= OnColorChanged;
+        networkColor.OnValueChanged -= OnColorChanged;
     }
 }

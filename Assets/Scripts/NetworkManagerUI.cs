@@ -11,12 +11,12 @@ public class NetworkManagerUI : MonoBehaviour
         // Solo mostramos los botones si NO estamos conectados aún
         if (!NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsServer)
         {
-            if (GUILayout.Button("Iniciar HOST (Editor)"))
+            if (GUILayout.Button("Iniciar HOST"))
             {
                 NetworkManager.Singleton.StartHost();
             }
 
-            if (GUILayout.Button("Iniciar CLIENTE (Virtual)"))
+            if (GUILayout.Button("Iniciar CLIENTE"))
             {
                 NetworkManager.Singleton.StartClient();
             }
