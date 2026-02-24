@@ -9,13 +9,19 @@ public class PlayerMovement : NetworkBehaviour
     [SerializeField] float speed;
     [SerializeField] MainCameraObject MainCamera;
     private Vector2 moveInput;
+    private int PlayerID;
     private Rigidbody rb;
     private NetworkVariable<Color> networkColor = new NetworkVariable<Color>(
         Color.white, 
         NetworkVariableReadPermission.Everyone, 
         NetworkVariableWritePermission.Owner // El dueño elige su color
     );
-    private Color[] colores={Color.green,Color.blue,Color.red};
+    private NetworkVariable<int> m_Score = new NetworkVariable<int>(
+        0, 
+        NetworkVariableReadPermission.Everyone, 
+        NetworkVariableWritePermission.Server // Solo el server puede escribir
+    );
+    private Color[] colores={Color.blue,Color.red,Color.green};
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -24,6 +30,10 @@ public class PlayerMovement : NetworkBehaviour
         //MeshRenderer renderer = GetComponent<MeshRenderer>();
 
         //renderer.material.color = Color.blue;
+    }
+    public int GetPlayerID()
+    {
+        return PlayerID;
     }
 
     void OnMove(InputValue value)
@@ -52,6 +62,7 @@ public class PlayerMovement : NetworkBehaviour
     public override void OnNetworkSpawn()
     {
         networkColor.OnValueChanged += OnColorChanged;
+        m_Score.OnValueChanged += OnScoreChanged;
         if (!IsOwner)
         {
             // Desactiva el componente que escucha el teclado si no es mi cápsula
@@ -61,14 +72,29 @@ public class PlayerMovement : NetworkBehaviour
         }
         else
         {
-            GetComponent<Renderer>().material.color=Color.blue;
-            networkColor.Value = colores[(int)NetworkObjectId%colores.Length];       
+            //GetComponent<Renderer>().material.color=Color.blue;
+            // 1. Buscamos todos los objetos con el tag "Player"
+            GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+            int playerIndex = (players.Length - 1) % colores.Length;
+            PlayerID=playerIndex;
+            //Debug.Log("C:"+playerIndex);
+            networkColor.Value = colores[playerIndex];       
         }
     }
     private void OnColorChanged(Color oldColor, Color newColor)
     {
         ApplyColor(newColor);
         //Debug.Log("Ingresa color"+NetworkObjectId+oldColor.ToString()+":"+newColor.ToString()); 
+    }
+    private void OnScoreChanged(int oldScore, int newScore)
+    {
+        // Solo imprime si el cambio es en MI propia cápsula
+        if (IsOwner) {
+            Debug.Log($"[YO SOY ID:{OwnerClientId}] Mi score cambió de {oldScore} a {newScore}");
+        } else {
+            //Debug.Log($"[OTRO ID:{OwnerClientId}] El score de otro cambió a {newScore}");
+        }
+        //Debug.Log("Soy: "+PlayerID+"\tEl Score total es: "+m_Score.Value);
     }
 
     private void ApplyColor(Color colorToApply)
@@ -79,6 +105,30 @@ public class PlayerMovement : NetworkBehaviour
         //propBlock.SetColor("_Color", colorToApply);
         //renderer.SetPropertyBlock(propBlock);
         renderer.material.color=colorToApply;
+    }
+    private void AddScore(int plusScore)
+    {
+        m_Score.Value=m_Score.Value+plusScore;
+    }
+    [Rpc(SendTo.Server)]
+    public void CollectItemServerRPC(int plusScore)
+    {
+        //Debug.Log("Ejecuta solo servidor");
+        AddScore(plusScore);
+        //GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        //foreach (GameObject jug in players){
+            //PlayerMovement jugTmp=jug.GetComponent<PlayerMovement>();
+            //if (jugTmp.PlayerID==playerID)
+           //{
+                //jugTmp.m_Score.Value=m_Score.Value+plusScore;
+            //}
+        //}        
+        ShowScoreRPC();
+    }
+    [Rpc(SendTo.ClientsAndHost)]
+    public void ShowScoreRPC()
+    {
+        Debug.Log($"Un jugador ha sumado puntaje");
     }
 
     // Limpieza al destruir el objeto
