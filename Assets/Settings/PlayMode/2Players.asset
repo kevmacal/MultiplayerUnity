@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 15024, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: asdf
+  m_Name: 2Players
   m_EditorClassIdentifier: UnityEditor.MultiplayerModule.dll::Unity.Multiplayer.PlayMode.Editor.ScenarioConfig
   m_Description: 
   m_EnableEditors: 1
@@ -35,7 +35,29 @@ MonoBehaviour:
     m_AdvancedConfiguration:
       StreamLogsToMainEditor: 0
       LogsColor: {r: 0.3643, g: 0.581, b: 0.8679, a: 1}
-  m_LocalInstances: []
+  m_LocalInstances:
+  - Name: Player1
+    <CorrespondingNodeId>k__BackingField: Player1 - Run
+    m_Nodes:
+    - Player1 - Build
+    - Player1 - Run
+    m_BuildProfile: {fileID: 11400000, guid: 3010382963462d947a75c42ae23af24a, type: 2}
+    m_ServerSettings:
+      DeployMode: 0
+      SimulatorSettings:
+        AutoAllocate: 1
+      CliSettings:
+        UseDefaultArguments: 1
+        Port: 7777
+        QueryProtocol: 0
+        QueryPort: 20000
+    advancedConfiguration:
+      m_StreamLogsToMainEditor: 1
+      m_LogsColor: {r: 0.3643, g: 0.581, b: 0.8679, a: 1}
+      m_LocalArguments: -screen-fullscreen 0 -screen-width 1024 -screen-height 720
+      m_SimulatedArguments: 
+      m_DeviceID: 
+      m_DeviceName: 
   m_RemoteInstances: []
   m_MainEditorInstanceObsolete:
     rid: -2

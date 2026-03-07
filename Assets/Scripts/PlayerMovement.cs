@@ -57,7 +57,7 @@ public class PlayerMovement : NetworkBehaviour
         //float h = Input.GetAxis("Horizontal");
         //float v = Input.GetAxis("Vertical");
         transform.Translate(move * speed * Time.fixedDeltaTime);
-        MainCamera.transform.position=new Vector3(transform.position.x,transform.position.y+1,transform.position.z-4);
+        MainCamera.transform.position=new Vector3(transform.position.x,transform.position.y+1,transform.position.z-6);
     }
     public override void OnNetworkSpawn()
     {
