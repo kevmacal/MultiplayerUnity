@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using Unity.Collections;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -9,14 +10,18 @@ using UnityEngine.UI;
 public class NetworkPlayerMovement : NetworkBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float jumpForce;
     [SerializeField] MainCameraObject MainCamera;
     [SerializeField] Canvas ownCanvas;
     
+    Rigidbody rb;
     private PlayerInput playerInput;
     private InputAction moveAction;
+    private InputAction jumpAction;
     private NetworkUI NUI;
     private string NUINAme;
     private TextMeshProUGUI playernameTMP;
+    private bool isGrounded;
     private NetworkVariable<Color> networkColor = new NetworkVariable<Color>(
         Color.white, 
         NetworkVariableReadPermission.Everyone, 
@@ -35,6 +40,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
         playerInput = GetComponent<PlayerInput>();        
         MainCamera = MainCameraObject.FindFirstObjectByType<MainCameraObject>();
         NUI=NetworkUI.FindFirstObjectByType<NetworkUI>();
+        rb=GetComponent<Rigidbody>();
         if (NUI!=null)
         {
             Transform inputField = NUI.transform.GetChild(2);
@@ -60,6 +66,15 @@ public class NetworkPlayerMovement : NetworkBehaviour
         }
         
         moveAction = playerInput.actions["Move"];
+        jumpAction=playerInput.actions["Jump"];
+    }
+    public void OnJump(InputValue value)
+    {
+        if (!IsOwner) return;
+        if (value.isPressed)
+        {
+            Debug.Log("¡Intentando saltar!");
+        }
     }
 
     public override void OnNetworkSpawn()
@@ -99,15 +114,39 @@ public class NetworkPlayerMovement : NetworkBehaviour
         MeshRenderer renderer = GetComponent<MeshRenderer>();
         renderer.material.color=colorToApply;
     }
-
+    [Rpc(SendTo.ClientsAndHost)]
+    private void JumpServerRpc()
+    {
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+    }
     private void Update()
     {
         if (!IsOwner) return;
 
-        var moveInput = moveAction.ReadValue<Vector2>();
-
+        var moveInput = moveAction.ReadValue<Vector2>();        
+        if (jumpAction.triggered&& isGrounded)
+        {
+            JumpServerRpc();
+        }
         var movement = new Vector3(moveInput.x, 0f, moveInput.y);
         transform.Translate(movement * (moveSpeed * Time.deltaTime), Space.World);
         MainCamera.transform.position=new Vector3(transform.position.x,transform.position.y+5,transform.position.z-7);
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Opcional: Revisa si el objeto tiene el tag "Suelo"
+        if (collision.gameObject.CompareTag("Suelo"))
+        {
+            isGrounded = true;
+        }
+    }
+
+    // Se ejecuta cuando dejas de tocar el suelo
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Suelo"))
+        {
+            isGrounded = false;
+        }
     }
 }
