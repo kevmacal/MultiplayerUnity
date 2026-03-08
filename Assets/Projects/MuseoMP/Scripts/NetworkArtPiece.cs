@@ -37,7 +37,7 @@ public class NetworkArtPiece : NetworkBehaviour
         //Verificar que el Objeto no sea Null
         if (playerNetObj == null) return;
         // Verificar si es el jugador LOCAL (IsOwner)
-        if (!playerNetObj.IsOwner) return;
+        //if (!playerNetObj.IsOwner) return;
         // Activar canvas SOLO para este jugador
         ShowInfoPanel();
     }
@@ -48,7 +48,7 @@ public class NetworkArtPiece : NetworkBehaviour
         NetworkObject playerNetObj = other.GetComponent<NetworkObject>();
         if (playerNetObj == null) return;
 
-        if (!playerNetObj.IsOwner) return;
+        //if (!playerNetObj.IsOwner) return;
 
         // Desactivar canvas
         HideInfoPanel();
