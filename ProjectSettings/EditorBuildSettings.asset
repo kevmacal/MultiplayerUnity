@@ -6,11 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 99c9720ab356a0642a771bea13969a05
+    path: Assets/Projects/Scenes/MenuInicial.unity
+    guid: bb8331c7ee838ce4a9f840f3727e1755
   - enabled: 1
-    path: Assets/Scenes/SceneTest1.unity
-    guid: 1693724d0b82f3d42a5c457e526d68bf
+    path: Assets/Projects/MuseoPC/Scenes/MuseoPC.unity
+    guid: 1d17d7cd521cdec41a9f7b39bb45f92d
   - enabled: 1
     path: Assets/Projects/MuseoMP/Scenes/MuseoMP.unity
     guid: e67261046033b2e46a2c63027b1b5ebf
