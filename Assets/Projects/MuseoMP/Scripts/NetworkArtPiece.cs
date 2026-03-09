@@ -5,9 +5,9 @@ using UnityEngine;
 public class NetworkArtPiece : NetworkBehaviour
 {
     [Header("Art Information")]
-    [SerializeField] private string m_Title = "Titulo del cuadro";
-    [SerializeField] private string m_Artist = "Artista del cuadro";
-    [SerializeField] private string m_Description = "Descripcion...";
+    [SerializeField] private string m_Title;
+    [SerializeField] private string m_Artist;
+    [SerializeField] private string m_Description;
 
     [Header("References")]
     [SerializeField] private Canvas m_InfoCanvas;

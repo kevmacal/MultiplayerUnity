@@ -13,15 +13,21 @@ public class NetworkPlayerMovement : NetworkBehaviour
     [SerializeField] private float jumpForce;
     [SerializeField] MainCameraObject MainCamera;
     [SerializeField] Canvas ownCanvas;
+    public LayerMask capaPlantaBaja;
+    public LayerMask capaPiso1;
+    public LayerMask capasComunes;
+    [SerializeField] Canvas menuCanvas;
     
     Rigidbody rb;
     private PlayerInput playerInput;
     private InputAction moveAction;
     private InputAction jumpAction;
+    private InputAction menuAction;
     private NetworkUI NUI;
     private string NUINAme;
     private TextMeshProUGUI playernameTMP;
     private bool isGrounded;
+    private bool onMenu;
     private NetworkVariable<Color> networkColor = new NetworkVariable<Color>(
         Color.white, 
         NetworkVariableReadPermission.Everyone, 
@@ -39,6 +45,10 @@ public class NetworkPlayerMovement : NetworkBehaviour
     {
         playerInput = GetComponent<PlayerInput>();        
         MainCamera = MainCameraObject.FindFirstObjectByType<MainCameraObject>();
+        onMenu=false;
+        menuCanvas.gameObject.SetActive(false);
+        VerPlantaBaja();
+        //Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("P1"));
         NUI=NetworkUI.FindFirstObjectByType<NetworkUI>();
         rb=GetComponent<Rigidbody>();
         if (NUI!=null)
@@ -67,6 +77,17 @@ public class NetworkPlayerMovement : NetworkBehaviour
         
         moveAction = playerInput.actions["Move"];
         jumpAction=playerInput.actions["Jump"];
+        menuAction=playerInput.actions["Menu"];
+    }
+    public void VerPlantaBaja()
+    {
+        // La cámara solo mostrará lo Común + Planta Baja
+        Camera.main.cullingMask = capasComunes | capaPlantaBaja;
+    }
+    public void VerPisoUno()
+    {
+        // La cámara solo mostrará lo Común + Planta Baja
+        Camera.main.cullingMask = capasComunes | capaPiso1;
     }
     public void OnJump(InputValue value)
     {
@@ -128,6 +149,18 @@ public class NetworkPlayerMovement : NetworkBehaviour
         {
             JumpServerRpc();
         }
+        if (menuAction.triggered)
+        {
+            if (onMenu)
+            {
+                onMenu=false;
+            }
+            else
+            {
+                onMenu=true;
+            }
+            menuCanvas.gameObject.SetActive(onMenu);
+        }
         var movement = new Vector3(moveInput.x, 0f, moveInput.y);
         transform.Translate(movement * (moveSpeed * Time.deltaTime), Space.World);
         MainCamera.transform.position=new Vector3(transform.position.x,transform.position.y+5,transform.position.z-7);
@@ -139,6 +172,16 @@ public class NetworkPlayerMovement : NetworkBehaviour
         {
             isGrounded = true;
         }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("P1"))
+        {
+            Debug.Log("Piso uno");
+            VerPisoUno();
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PB"))
+        {
+            Debug.Log("Planta baja");
+            VerPlantaBaja();
+        }
     }
 
     // Se ejecuta cuando dejas de tocar el suelo
@@ -147,6 +190,16 @@ public class NetworkPlayerMovement : NetworkBehaviour
         if (collision.gameObject.CompareTag("Suelo"))
         {
             isGrounded = false;
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("P1"))
+        {
+            Debug.Log("Piso uno");
+            VerPisoUno();
+        }
+        if (collision.gameObject.layer == LayerMask.NameToLayer("PB"))
+        {
+            Debug.Log("Planta baja");
+            VerPlantaBaja();
         }
     }
 }
