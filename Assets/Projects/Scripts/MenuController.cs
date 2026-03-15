@@ -12,6 +12,10 @@ public class MenuController : MonoBehaviour
     {
         SceneManager.LoadScene("MuseoMP");
     }
+    public void CargarJuegoPC()
+    {
+        SceneManager.LoadScene("EggFirePC");
+    }
     public void CargarMenu()
     {
         if (NetworkManager.Singleton != null)

@@ -10,7 +10,7 @@ public class NetworkStairs : NetworkBehaviour
     {
         if (stairs != null)
         {
-            Debug.Log("Desactivado");
+            //Debug.Log("Desactivado");
             stairs.gameObject.SetActive(false);
         }
         else
@@ -27,7 +27,7 @@ public class NetworkStairs : NetworkBehaviour
         // Verificar si es el jugador LOCAL (IsOwner)
         //if (!playerNetObj.IsOwner) return;
         // Activar canvas SOLO para este jugador
-        Debug.Log("Activar Stairs");
+        //Debug.Log("Activar Stairs");
         ShowStairs();
     }
     private void OnTriggerExit(Collider other)
