@@ -1,3 +1,4 @@
+using System;
 using System.ComponentModel;
 using JetBrains.Annotations;
 using TMPro;
@@ -18,11 +19,13 @@ public class PlayerMovementMuseoPC : MonoBehaviour
     [SerializeField] Canvas menuCanvas;
     
     Rigidbody rb;
+    private LanzarEgg eggAttack;
     private PlayerInput playerInput;
     private InputAction moveAction;
     private InputAction jumpAction;
     private InputAction menuAction;
     private InputAction lookAction;
+    private InputAction attack;
     private UIStartPc NUI;
     private string NUINAme;
     private TextMeshProUGUI playernameTMP;
@@ -39,6 +42,7 @@ public class PlayerMovementMuseoPC : MonoBehaviour
     {
         playerInput = GetComponent<PlayerInput>();        
         MainCamera = MainCameraObject.FindFirstObjectByType<MainCameraObject>();
+        eggAttack=GetComponent<LanzarEgg>();
         MainCamera.SetTarget(this.transform);
         MainCamera.BloquearMouse();
         onMenu=false;
@@ -75,6 +79,7 @@ public class PlayerMovementMuseoPC : MonoBehaviour
         jumpAction=playerInput.actions["Jump"];
         menuAction=playerInput.actions["Menu"];
         lookAction=playerInput.actions["Look"];
+        attack=playerInput.actions["Attack"];
         
         //Debug.Log("Inicia");
     }
@@ -97,8 +102,16 @@ public class PlayerMovementMuseoPC : MonoBehaviour
     {
         ApplyColor(colores[0]);
         ChangeName(NUINAme);
-        lookAction.performed+=OnLookInput;     
+        lookAction.performed+=OnLookInput; 
+        attack.performed+=OnAttack;    
     }
+
+    private void OnAttack(InputAction.CallbackContext context)
+    {
+        Debug.Log("Attack");
+        eggAttack.OnFire();
+    }
+
     private void OnLookInput(InputAction.CallbackContext context)
     {
         // Obtenemos el Vector2 del mouse
@@ -179,6 +192,21 @@ public class PlayerMovementMuseoPC : MonoBehaviour
         // {
         //     Debug.Log("Velocidad Real: " + currentSpeed.ToString("F2") + " m/s");
         // }
+    }
+    void LateUpdate() // Se ejecuta después de todo el movimiento
+    {
+        //Funciona si el mapa es cuadrado
+        //Es de 25x25 pero mejor limitarlo un poco antes
+        float limiteX = 23f;
+        float limiteZ = 23f;
+
+        Vector3 pos = transform.position;
+
+        // Si el jugador se pasa de los límites, lo devolvemos a la fuerza
+        pos.x = Mathf.Clamp(pos.x, -limiteX, limiteX);
+        pos.z = Mathf.Clamp(pos.z, -limiteZ, limiteZ);
+
+        transform.position = pos;
     }
     private void OnCollisionEnter(Collision collision)
     {

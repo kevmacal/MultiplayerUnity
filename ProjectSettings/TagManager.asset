@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 3
   tags:
   - Suelo
+  - Sheep
+  - Cow
+  - Chicken
+  - Pig
+  - Enemigo
   layers:
   - Default
   - TransparentFX
