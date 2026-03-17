@@ -679,9 +679,10 @@ GameObject:
   - component: {fileID: 2692594753747960194}
   - component: {fileID: 54689378711371506}
   - component: {fileID: 136432924633376916}
+  - component: {fileID: 107340961143750362}
   m_Layer: 0
   m_Name: Sheep
-  m_TagString: Sheep
+  m_TagString: Enemigo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -724,7 +725,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 126
@@ -752,6 +753,19 @@ CapsuleCollider:
   m_Height: 1.58
   m_Direction: 2
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!114 &107340961143750362
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2692594753747960197}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6f19b28b55ee74db1d168d978719d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  desplazamientoY: 2
 --- !u!1 &2692594753769500436
 GameObject:
   m_ObjectHideFlags: 0

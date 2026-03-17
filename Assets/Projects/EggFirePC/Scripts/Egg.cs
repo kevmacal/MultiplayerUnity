@@ -30,6 +30,18 @@ public class Egg : MonoBehaviour
             // Ejemplo: si choca con un enemigo
             if (collision.gameObject.CompareTag("Enemigo"))
             {
+                Enemy scriptEnemigo = collision.gameObject.GetComponent<Enemy>();
+                if (scriptEnemigo != null)
+                {     
+                    // Hablamos con el jugador para darle su punto
+                    if (lanzarEgg_player != null&&scriptEnemigo.IsAlive())
+                    {
+                        scriptEnemigo.Derrotar();
+                        //lanzarEgg_player.GanarPunto();
+                        lanzarEgg_player.GetPlayerScore().AddScore();
+                        Debug.Log("Ganar punto");
+                    }
+                }
                 // Hacer algo al enemigo
                 isHit=true;
             }

@@ -6,6 +6,7 @@ using Unity.Burst.Intrinsics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovementMuseoPC : MonoBehaviour
 {
@@ -109,7 +110,14 @@ public class PlayerMovementMuseoPC : MonoBehaviour
     private void OnAttack(InputAction.CallbackContext context)
     {
         Debug.Log("Attack");
-        eggAttack.OnFire();
+        if (SceneManager.GetActiveScene().name == "EggFirePC")
+        {
+            if (eggAttack!=null)
+            {
+                eggAttack.OnFire();
+            }            
+        }
+        
     }
 
     private void OnLookInput(InputAction.CallbackContext context)

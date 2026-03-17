@@ -5,6 +5,7 @@ public class LanzarEgg : MonoBehaviour
 {
     [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private Transform puntoDisparo;
+    [SerializeField] private PlayerScore ps;
     [SerializeField] private float fuerzaFrontal = 10f;
     [SerializeField] private float fuerzaAscendente = 5f;
     private int eggs=0;
@@ -26,9 +27,14 @@ public class LanzarEgg : MonoBehaviour
     {
         //Sumar huevo en lanzamiento
         eggs++;
+        if (proyectilPrefab==null||puntoDisparo==null)
+        {
+            Debug.Log("Null Egg");
+            return;
+        }
         GameObject huevo = Instantiate(proyectilPrefab, puntoDisparo.position, puntoDisparo.rotation);
         Egg huevoNuevo=huevo.GetComponent<Egg>();
-        huevoNuevo.Configurar(this);
+        huevoNuevo.Configurar(this);        
 
         //Fisicas de lanzamiento
         Rigidbody rb = huevo.GetComponent<Rigidbody>();
@@ -41,6 +47,10 @@ public class LanzarEgg : MonoBehaviour
         rb.AddForce(direccionLanzamiento, ForceMode.Impulse);        
         
     }
+    public PlayerScore GetPlayerScore()
+    {
+        return ps;
+    }
     public void SelfDestroyNotify()
     {
         eggs--;
@@ -48,5 +58,5 @@ public class LanzarEgg : MonoBehaviour
         {
             eggs=0;
         }
-    }
+    }    
 }

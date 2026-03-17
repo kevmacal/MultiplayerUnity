@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 4816334521439100988}
   - component: {fileID: 305504978741764574}
   m_Layer: 5
-  m_Name: UIPC
+  m_Name: UIMuseoPC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -18,9 +18,11 @@ public class MenuController : MonoBehaviour
     }
     public void CargarMenu()
     {
+        Time.timeScale = 1f;
         if (NetworkManager.Singleton != null)
         {
             NetworkManager.Singleton.Shutdown();
+            Destroy(NetworkManager.Singleton.gameObject);
         }
         SceneManager.LoadScene("MenuInicial");
     }
