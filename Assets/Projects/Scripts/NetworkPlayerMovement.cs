@@ -28,6 +28,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
     private TextMeshProUGUI playernameTMP;
     private bool isGrounded;
     private bool onMenu;
+    private NetworkCounter CounterCanvas;
     private NetworkVariable<Color> networkColor = new NetworkVariable<Color>(
         Color.white, 
         NetworkVariableReadPermission.Everyone, 
@@ -47,6 +48,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
         MainCamera = MainCameraObject.FindFirstObjectByType<MainCameraObject>();
         onMenu=false;
         menuCanvas.gameObject.SetActive(false);
+        CounterCanvas=NetworkCounter.FindFirstObjectByType<NetworkCounter>();
         VerPlantaBaja();
         //Camera.main.cullingMask &= ~(1 << LayerMask.NameToLayer("P1"));
         NUI=NetworkUI.FindFirstObjectByType<NetworkUI>();
@@ -77,7 +79,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
         
         moveAction = playerInput.actions["Move"];
         jumpAction=playerInput.actions["Jump"];
-        menuAction=playerInput.actions["Menu"];
+        menuAction=playerInput.actions["Menu"];        
     }
     public void VerPlantaBaja()
     {
@@ -102,6 +104,7 @@ public class NetworkPlayerMovement : NetworkBehaviour
     {
         networkColor.OnValueChanged += OnColorChanged;
         networkPlayerName.OnValueChanged+=OnNameChanged;
+        CounterCanvas.AddCounterRpc();
         if (!IsOwner)
         {
             // Disable input for remote players
@@ -111,10 +114,24 @@ public class NetworkPlayerMovement : NetworkBehaviour
         }
         else
         {
+            
             GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
             int playerIndex = (players.Length - 1) % colores.Length;
             networkColor.Value = colores[playerIndex];
             networkPlayerName.Value=NUINAme;
+        }
+    }
+    public override void OnNetworkDespawn()
+    {
+        CounterCanvas.ReduceCounterRpc();
+        base.OnNetworkDespawn();
+        if (!IsOwner)
+        {
+            //Nothing
+        }
+        else
+        {
+            
         }
     }
     private void OnColorChanged(Color oldColor, Color newColor)
