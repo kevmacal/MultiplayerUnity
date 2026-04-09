@@ -1,6 +1,7 @@
 using TMPro;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class NetworkArtPiece : NetworkBehaviour
 {
@@ -8,12 +9,14 @@ public class NetworkArtPiece : NetworkBehaviour
     [SerializeField] private string m_Title;
     [SerializeField] private string m_Artist;
     [SerializeField] private string m_Description;
+    [SerializeField] private Light artPieceLight;
 
     [Header("References")]
     [SerializeField] private Canvas m_InfoCanvas;
     [SerializeField] private TextMeshProUGUI m_TitleText;
     [SerializeField] private TextMeshProUGUI m_ArtistText;
     [SerializeField] private TextMeshProUGUI m_DescriptionText;
+    [SerializeField] AudioController SoundCry;
 
     private void Start()
     {
@@ -26,6 +29,7 @@ public class NetworkArtPiece : NetworkBehaviour
         if (m_InfoCanvas != null)
         {
             m_InfoCanvas.gameObject.SetActive(false);
+            artPieceLight.enabled=false;
         }
     }
 
@@ -39,6 +43,7 @@ public class NetworkArtPiece : NetworkBehaviour
         // Verificar si es el jugador LOCAL (IsOwner)
         //if (!playerNetObj.IsOwner) return;
         // Activar canvas SOLO para este jugador
+        SoundCry.ReproducirMusica();
         ShowInfoPanel();
     }
 
@@ -58,6 +63,7 @@ public class NetworkArtPiece : NetworkBehaviour
     {
         if (m_InfoCanvas != null)
         {
+            artPieceLight.enabled=true;
             m_InfoCanvas.gameObject.SetActive(true);
             Debug.Log($"[Local] Viendo: {m_Title}");
         }
@@ -67,6 +73,7 @@ public class NetworkArtPiece : NetworkBehaviour
     {
         if (m_InfoCanvas != null)
         {
+            artPieceLight.enabled=false;
             m_InfoCanvas.gameObject.SetActive(false);
             Debug.Log($"[Local] Dejó de ver: {m_Title}");
         }

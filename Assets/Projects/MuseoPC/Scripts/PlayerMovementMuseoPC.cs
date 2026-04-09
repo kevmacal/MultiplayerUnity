@@ -144,6 +144,7 @@ public class PlayerMovementMuseoPC : MonoBehaviour
     {
         //Debug.Log("Salta");
         rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        isGrounded=false;
     }
     
     private void Update()
@@ -235,12 +236,12 @@ public class PlayerMovementMuseoPC : MonoBehaviour
         }
     }
 
-    // Se ejecuta cuando dejas de tocar el suelo
+    // Se ejecuta cuando deja de tocar el suelo
     private void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.CompareTag("Suelo"))
         {
-            isGrounded = false;
+            //isGrounded = false;
         }
         if (collision.gameObject.layer == LayerMask.NameToLayer("P1"))
         {
